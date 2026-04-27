@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN
+  COCINERA
+  CLIENTE
+}
+
+enum EstadoPedido {
+  RESERVADO
+  PAGADO
+  EN_PREPARACION
+  LISTO_PARA_ENVIO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+}
+
+enum TipoProducto {
+  MENU_DIA
+  CARTA
+  ADICIONAL
+}
+
+enum DiaSemana {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
+model Usuario {
+  id            Int       @id @default(autoincrement())
+  nombre        String
+  email         String    @unique
+  password      String
+  telefono      String?
+  rol           Rol
+  activo        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  cocinera      Cocinera?
+  cliente       Cliente?
+
+  @@map("usuarios")
+}
+
+model Cocinera {
+  id                  Int       @id @default(autoincrement())
+  usuarioId           Int       @unique
+  nombreNegocio       String
+  descripcion         String?
+  latitudCocina       Float?
+  longitudCocina      Float?
+  direccionReferencia String?
+  repartirLejos       Boolean   @default(false)
+  radioRepartoMetros  Int       @default(1000)
+  promedioEstrellas   Float     @default(0)
+  totalCalificaciones Int       @default(0)
+  activa              Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  usuario             Usuario   @relation(fields: [usuarioId], references: [id])
+  menusSemanal        MenuSemanal[]
+  productosCarta      ProductoCarta[]
+  pedidos             Pedido[]
+  calificaciones      Calificacion[]
+
+  @@map("cocineras")
+}
+
+model Cliente {
+  id              Int       @id @default(autoincrement())
+  usuarioId       Int       @unique
+  latitudActual   Float?
+  longitudActual  Float?
+  direccion       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
+  pedidos         Pedido[]
+  calificaciones  Calificacion[]
+
+  @@map("clientes")
+}
+
+model MenuSemanal {
+  id              Int         @id @default(autoincrement())
+  cocineraId      Int
+  semanaInicio    DateTime
+  dia             DiaSemana
+  descripcion     String
+  entrada1        String?
+  entrada2        String?
+  incluyeRefresco Boolean     @default(true)
+  precio          Float
+  cuposTotales    Int         @default(24)
+  activo          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  cocinera        Cocinera    @relation(fields: [cocineraId], references: [id])
+  confirmaciones  ConfirmacionDiaria[]
+  detallesPedido  DetallePedido[]
+
+  @@map("menus_semanal")
+}
+
+model ConfirmacionDiaria {
+  id              Int         @id @default(autoincrement())
+  menuSemanalId   Int
+  fecha           DateTime
+  cuposDisponibles Int        @default(24)
+  confirmado      Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+
+  menuSemanal     MenuSemanal @relation(fields: [menuSemanalId], references: [id])
+
+  @@unique([menuSemanalId, fecha])
+  @@map("confirmaciones_diarias")
+}
+
+model ProductoCarta {
+  id              Int           @id @default(autoincrement())
+  cocineraId      Int
+  nombre          String
+  descripcion     String?
+  precio          Float
+  tipo            TipoProducto
+  horarioInicio   String        @default("11:00")
+  horarioFin      String        @default("21:00")
+  activo          Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  cocinera        Cocinera      @relation(fields: [cocineraId], references: [id])
+  detallesPedido  DetallePedido[]
+
+  @@map("productos_carta")
+}
+
+model Pedido {
+  id                    Int           @id @default(autoincrement())
+  clienteId             Int
+  cocineraId            Int
+  estado                EstadoPedido  @default(PAGADO)
+  horaEntregaElegida    String
+  direccionEntrega      String
+  latitudEntrega        Float?
+  longitudEntrega       Float?
+  subtotal              Float
+  comisionPlataforma    Float
+  comisionPasarela      Float
+  totalPagado           Float
+  gananciaCocinera      Float
+  culqiChargeId         String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  cliente               Cliente       @relation(fields: [clienteId], references: [id])
+  cocinera              Cocinera      @relation(fields: [cocineraId], references: [id])
+  detalles              DetallePedido[]
+  pago                  Pago?
+
+  @@map("pedidos")
+}
+
+model DetallePedido {
+  id              Int           @id @default(autoincrement())
+  pedidoId        Int
+  menuSemanalId   Int?
+  productoCartaId Int?
+  cantidad        Int
+  precioUnitario  Float
+  subtotal        Float
+
+  pedido          Pedido        @relation(fields: [pedidoId], references: [id])
+  menuSemanal     MenuSemanal?  @relation(fields: [menuSemanalId], references: [id])
+  productoCarta   ProductoCarta? @relation(fields: [productoCartaId], references: [id])
+
+  @@map("detalles_pedido")
+}
+
+model Pago {
+  id              Int       @id @default(autoincrement())
+  pedidoId        Int       @unique
+  culqiChargeId   String?
+  monto           Float
+  estado          String    @default("COMPLETADO")
+  metodoPago      String
+  createdAt       DateTime  @default(now())
+
+  pedido          Pedido    @relation(fields: [pedidoId], references: [id])
+
+  @@map("pagos")
+}
+
+model Calificacion {
+  id              Int       @id @default(autoincrement())
+  clienteId       Int
+  cocineraId      Int
+  estrellas       Int
+  comentario      String?
+  createdAt       DateTime  @default(now())
+
+  cliente         Cliente   @relation(fields: [clienteId], references: [id])
+  cocinera        Cocinera  @relation(fields: [cocineraId], references: [id])
+
+  @@map("calificaciones")
+}
