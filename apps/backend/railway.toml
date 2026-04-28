@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "pnpm install && npx prisma generate && pnpm run build"
+
+[deploy]
+startCommand = "node dist/main.js"
