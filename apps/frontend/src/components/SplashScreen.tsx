@@ -8,8 +8,8 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
   useEffect(() => {
     setTimeout(() => setFase(1), 100);
     setTimeout(() => setFase(2), 800);
-    setTimeout(() => setFase(3), 1800);
-    setTimeout(() => setMostrar(false), 2400);
+    setTimeout(() => setFase(3), 2800);
+    setTimeout(() => setMostrar(false), 3400);
   }, []);
 
   if (!mostrar) return <>{children}</>;
