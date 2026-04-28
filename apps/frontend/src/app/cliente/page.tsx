@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import api from '@/lib/api';
+import Image from 'next/image';
 import MapaClienteDynamic from '@/components/MapaClienteDynamic';
 
 interface Cocinera {
@@ -81,7 +82,7 @@ export default function ClienteHome() {
     <div className="min-h-screen bg-light">
       {/* Header */}
       <header className="bg-primary-600 text-white px-4 py-4 flex items-center justify-between sticky top-0 z-50">
-        <h1 className="text-xl font-bold">🍽️ MenuAhora</h1>
+        <Image src="/logo.png" alt="MenuAhora" width={140} height={45} />
         <div className="flex items-center gap-3">
           <span className="text-sm opacity-80">Hola, {usuario?.nombre?.split(' ')[0]}</span>
           <button
