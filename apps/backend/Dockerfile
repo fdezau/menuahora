@@ -4,15 +4,14 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY apps/backend/package.json apps/backend/pnpm-lock.yaml ./
 RUN pnpm install
 
-COPY . .
+COPY apps/backend/ .
 
 RUN npx prisma generate
 RUN pnpm run build
 
 EXPOSE 3001
 
-CMD ["node", "dist/main.js"]
-# force rebuild
+CMD ["node", "dist/src/main.js"]
