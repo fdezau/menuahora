@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd apps/backend && pnpm install && npx prisma generate && pnpm run build",
-    "start": "node apps/backend/dist/main.js"
+    "postinstall": "cd apps/backend && npx prisma generate && pnpm run build",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
