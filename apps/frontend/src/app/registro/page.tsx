@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function RegistroPage() {
   const [form, setForm] = useState({ nombre: '', email: '', password: '', telefono: '', rol: 'CLIENTE' });
@@ -27,9 +26,8 @@ export default function RegistroPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-900 p-4">
       <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-100 w-full max-w-md">
-        {/* Logo centrado */}
         <div className="flex justify-center pt-2 pb-4">
-          <Image src="/logo.png" alt="MenuAhora" width={280} height={90} priority />
+          <img src="/logo.png" alt="MenuAhora" style={{ width: "280px", height: "auto" }} />
         </div>
 
         <p className="text-gray-500 text-center text-sm mb-6">Crea tu cuenta</p>
@@ -60,9 +58,7 @@ export default function RegistroPage() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-primary-600 font-semibold hover:underline">
-            Inicia sesión
-          </Link>
+          <Link href="/login" className="text-primary-600 font-semibold hover:underline">Inicia sesión</Link>
         </p>
       </div>
     </div>
