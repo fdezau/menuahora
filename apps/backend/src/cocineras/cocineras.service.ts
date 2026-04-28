@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCocineraDto } from './dto/update-cocinera.dto';
+import { CreateProductoDto } from './dto/create-producto.dto';
 
 @Injectable()
 export class CocinerasService {
@@ -47,7 +48,28 @@ export class CocinerasService {
     return this.prisma.cocinera.update({ where: { id }, data: dto });
   }
 
-  private calcularDistancia(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  async agregarProducto(cocineraId: number, dto: CreateProductoDto) {
+    return this.prisma.productoCarta.create({
+      data: {
+        cocineraId,
+        nombre: dto.nombre,
+        descripcion: dto.descripcion,
+        precio: dto.precio,
+        tipo: dto.tipo,
+        horarioInicio: dto.horarioInicio || '11:00',
+        horarioFin: dto.horarioFin || '21:00',
+      },
+    });
+  }
+
+  async eliminarProducto(id: number) {
+    return this.prisma.productoCarta.update({
+      where: { id },
+      data: { activo: false },
+    });
+  }
+
+    private calcularDistancia(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371000;
     const dLat = this.toRad(lat2 - lat1);
     const dLon = this.toRad(lon2 - lon1);
