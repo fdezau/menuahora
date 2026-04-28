@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://192.168.18.78:3000', 'https://menuahora-plum.vercel.app'],
+    origin: ['http://localhost:3000', 'http://192.168.18.78:3000', 'https://menuahora-jade.vercel.app'],
     credentials: true,
   });
 
