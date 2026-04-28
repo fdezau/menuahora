@@ -30,7 +30,7 @@ export default function CocineraDashboard() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [cocinera, setCocinera] = useState<Cocinera | null>(null);
   const [loading, setLoading] = useState(true);
-  const [diaCerrado, setDiaCerrado] = useState(false);
+  const [disponible, setDisponible] = useState(true);
   const router = useRouter();
 
   useEffect(() => { loadFromStorage(); }, []);
@@ -42,7 +42,7 @@ export default function CocineraDashboard() {
       const miCocinera = cocinerasRes.data.find((c: any) => c.usuarioId === usuario?.id);
       if (!miCocinera) return;
       setCocinera(miCocinera);
-      setDiaCerrado(!miCocinera.activa);
+      setDisponible(miCocinera.activa);
 
       const pedidosRes = await api.get(`/pedidos/cocinera/${miCocinera.id}`);
       setPedidos(pedidosRes.data);
@@ -62,38 +62,13 @@ export default function CocineraDashboard() {
     }
   };
 
-  const toggleCerrarDia = async () => {
+  const toggleDisponible = async () => {
     if (!cocinera) return;
-
-    if (!diaCerrado) {
-      // Quiere cerrar — verificar si hay pedidos pendientes
-      const pedidosPendientes = pedidos.filter((p) =>
-        ['PAGADO', 'EN_PREPARACION', 'LISTO_PARA_ENVIO'].includes(p.estado)
-      );
-
-      if (pedidosPendientes.length > 0) {
-        const confirmar = confirm(
-          `Tienes ${pedidosPendientes.length} pedido(s) pendientes. Se cerrarán las ventas pero debes completar los pedidos existentes. ¿Continuar?`
-        );
-        if (!confirmar) return;
-      }
-
-      try {
-        await api.put(`/cocineras/${cocinera.id}`, { activa: false });
-        setDiaCerrado(true);
-        alert('🔴 Día cerrado — no recibirás nuevos pedidos. Completa los pedidos pendientes.');
-      } catch {
-        alert('Error al cerrar');
-      }
-    } else {
-      // Quiere reabrir
-      try {
-        await api.put(`/cocineras/${cocinera.id}`, { activa: true });
-        setDiaCerrado(false);
-        alert('🟢 ¡Día abierto! Ya puedes recibir pedidos.');
-      } catch {
-        alert('Error al reabrir');
-      }
+    try {
+      await api.put(`/cocineras/${cocinera.id}`, { activa: !disponible });
+      setDisponible(!disponible);
+    } catch {
+      alert('Error al cambiar disponibilidad');
     }
   };
 
@@ -123,7 +98,7 @@ export default function CocineraDashboard() {
   };
 
   const totalDia = pedidos.reduce((acc, p) => acc + p.gananciaCocinera, 0);
-  const pedidosPendientes = pedidos.filter((p) => !['ENTREGADO', 'CANCELADO'].includes(p.estado)).length;
+  const entregados = pedidos.filter((p) => p.estado === 'ENTREGADO').length;
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Cargando...</div>;
 
@@ -145,13 +120,28 @@ export default function CocineraDashboard() {
         </button>
       </header>
 
-      {/* Estado del día */}
-      <div className={`px-4 py-2 text-sm font-semibold text-center ${diaCerrado ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-        {diaCerrado ? '🔴 Día cerrado — No recibes nuevos pedidos' : '🟢 Día abierto — Recibiendo pedidos'}
+      {/* Toggle disponible */}
+      <div className="px-4 pt-3 max-w-lg mx-auto">
+        <button
+          onClick={toggleDisponible}
+          className={`w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all active:scale-[0.98] ${
+            disponible
+              ? 'bg-green-500 text-white'
+              : 'bg-gray-300 text-gray-600'
+          }`}
+        >
+          <div className={`w-12 h-7 rounded-full relative transition-all ${disponible ? 'bg-green-700' : 'bg-gray-400'}`}>
+            <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all ${disponible ? 'right-1' : 'left-1'}`} />
+          </div>
+          {disponible ? '🟢 Disponible' : '🔴 No disponible'}
+        </button>
+        <p className="text-xs text-gray-400 text-center mt-1">
+          {disponible ? 'Los clientes pueden verte y hacer pedidos' : 'No apareces para los clientes'}
+        </p>
       </div>
 
       {/* Resumen del día */}
-      <div className="bg-primary-700 text-white px-4 py-3 flex justify-around">
+      <div className="bg-primary-700 text-white px-4 py-3 mt-3 flex justify-around">
         <div className="text-center">
           <p className="text-2xl font-bold">{pedidos.length}</p>
           <p className="text-xs opacity-80">Pedidos hoy</p>
@@ -161,23 +151,16 @@ export default function CocineraDashboard() {
           <p className="text-xs opacity-80">Ganancia hoy</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold">{pedidosPendientes}</p>
-          <p className="text-xs opacity-80">Pendientes</p>
+          <p className="text-2xl font-bold">{entregados}</p>
+          <p className="text-xs opacity-80">Entregados</p>
         </div>
       </div>
 
-      {/* Botón cerrar/abrir día */}
+      {/* Recordatorio horario */}
       <div className="px-4 pt-3 max-w-lg mx-auto">
-        <button
-          onClick={toggleCerrarDia}
-          className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${
-            diaCerrado
-              ? 'bg-green-100 text-green-700 hover:bg-green-200'
-              : 'bg-red-50 text-red-600 hover:bg-red-100'
-          }`}
-        >
-          {diaCerrado ? '🟢 Abrir día — Recibir pedidos' : '🔴 Cerrar día — No recibir más pedidos'}
-        </button>
+        <div className="bg-primary-50 text-primary-700 rounded-xl px-4 py-2 text-xs text-center font-semibold">
+          ⏰ Los pedidos de menú del día se aceptan hasta las 11:00 AM
+        </div>
       </div>
 
       {/* Lista de pedidos */}
@@ -241,31 +224,19 @@ export default function CocineraDashboard() {
           <span className="text-xl">📊</span>
           <span className="text-[10px] font-semibold">Pedidos</span>
         </button>
-        <button
-          onClick={() => router.push('/cocinera/menu-semanal')}
-          className="flex flex-col items-center text-gray-400"
-        >
+        <button onClick={() => router.push('/cocinera/menu-semanal')} className="flex flex-col items-center text-gray-400">
           <span className="text-xl">📋</span>
           <span className="text-[10px]">Menú</span>
         </button>
-        <button
-          onClick={() => router.push('/cocinera/carta')}
-          className="flex flex-col items-center text-gray-400"
-        >
+        <button onClick={() => router.push('/cocinera/carta')} className="flex flex-col items-center text-gray-400">
           <span className="text-xl">🍟</span>
           <span className="text-[10px]">Carta</span>
         </button>
-        <button
-          onClick={() => router.push('/cocinera/ubicacion')}
-          className="flex flex-col items-center text-gray-400"
-        >
+        <button onClick={() => router.push('/cocinera/ubicacion')} className="flex flex-col items-center text-gray-400">
           <span className="text-xl">📍</span>
           <span className="text-[10px]">Ubicación</span>
         </button>
-        <button
-          onClick={() => router.push('/cocinera/ganancias')}
-          className="flex flex-col items-center text-gray-400"
-        >
+        <button onClick={() => router.push('/cocinera/ganancias')} className="flex flex-col items-center text-gray-400">
           <span className="text-xl">💰</span>
           <span className="text-[10px]">Ganancias</span>
         </button>
