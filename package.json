@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cd apps/backend && pnpm install && npx prisma generate && pnpm run build",
+    "start": "node apps/backend/dist/main.js"
   },
   "keywords": [],
   "author": "",
