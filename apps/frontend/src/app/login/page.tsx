@@ -21,7 +21,7 @@ export default function LoginPage() {
       else if (usuario?.rol === 'COCINERA') router.push('/cocinera');
       else router.push('/cliente');
     } catch {
-      setError('Credenciales inválidas');
+      setError('Credenciales inv\u00e1lidas');
     }
   };
 
@@ -29,18 +29,18 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-900 p-4">
       <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-100 w-full max-w-md">
         <div className="flex justify-center pt-2 pb-4">
-          <img src="/logo.png" alt="MenuAhora" style={{ width: "280px", height: "auto" }} />
+          <img src="/logo.png" alt="MenuAhora" style={{ width: '280px', height: 'auto' }} />
         </div>
 
-        <p className="text-gray-500 text-center text-sm mb-6">Inicia sesión</p>
+        <p className="text-gray-500 text-center text-sm mb-6">Inicia sesi\u00f3n</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm text-center">{error}</div>
           )}
 
-          <input type="email" placeholder="Correo electrónico" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
-          <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
+          <input type="email" placeholder="Correo electr\u00f3nico" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
+          <input type="password" placeholder="Contrase\u00f1a" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
 
           <button type="submit" disabled={loading} className="w-full bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 transition-all duration-200 active:scale-95">
             {loading ? 'Ingresando...' : 'Ingresar'}
@@ -48,8 +48,8 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          ¿No tienes cuenta?{' '}
-          <Link href="/registro" className="text-primary-600 font-semibold hover:underline">Regístrate</Link>
+          \u00bfNo tienes cuenta?{' '}
+          <Link href="/registro" className="text-primary-600 font-semibold hover:underline">Reg\u00edstrate</Link>
         </p>
       </div>
     </div>
