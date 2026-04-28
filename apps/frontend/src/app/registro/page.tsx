@@ -43,10 +43,10 @@ export default function RegistroPage() {
           <input type="tel" placeholder="Teléfono (opcional)" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" />
 
           <div className="flex gap-3">
-            <button type="button" onClick={() => setForm({ ...form, rol: 'CLIENTE' })} className={`flex-1 py-3 rounded-xl font-semibold transition-all ${'bg-primary-600 text-white' if 1 else ''}`}>
+            <button type="button" onClick={() => setForm({ ...form, rol: 'CLIENTE' })} className={`flex-1 py-3 rounded-xl font-semibold transition-all ${form.rol === 'CLIENTE' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600'}`}>
               \ud83d\uded2 Cliente
             </button>
-            <button type="button" onClick={() => setForm({ ...form, rol: 'COCINERA' })} className={`flex-1 py-3 rounded-xl font-semibold transition-all ${'bg-gray-100 text-gray-600'}`}>
+            <button type="button" onClick={() => setForm({ ...form, rol: 'COCINERA' })} className={`flex-1 py-3 rounded-xl font-semibold transition-all ${form.rol === 'COCINERA' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600'}`}>
               \ud83c\udf73 Cocinera
             </button>
           </div>
