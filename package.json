@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "postinstall": "cd apps/backend && npx prisma generate && pnpm run build",
-    "start": "node index.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
