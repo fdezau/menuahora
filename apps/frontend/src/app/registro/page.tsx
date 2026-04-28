@@ -27,15 +27,18 @@ export default function RegistroPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-900 p-4">
       <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-100 w-full max-w-md">
-        <div className="text-center mb-8">
-          <Image src="/logo.png" alt="MenuAhora" width={250} height={80} className="mx-auto" priority />
-          <p className="text-gray-500 mt-3">Crea tu cuenta</p>
+        {/* Logo centrado */}
+        <div className="flex justify-center pt-2 pb-4">
+          <Image src="/logo.png" alt="MenuAhora" width={280} height={90} priority />
         </div>
+
+        <p className="text-gray-500 text-center text-sm mb-6">Crea tu cuenta</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm text-center">{error}</div>
           )}
+
           <input type="text" placeholder="Nombre completo" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
           <input type="email" placeholder="Correo electrónico" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
           <input type="password" placeholder="Contraseña (mín. 6 caracteres)" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
@@ -57,7 +60,9 @@ export default function RegistroPage() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-primary-600 font-semibold hover:underline">Inicia sesión</Link>
+          <Link href="/login" className="text-primary-600 font-semibold hover:underline">
+            Inicia sesión
+          </Link>
         </p>
       </div>
     </div>
