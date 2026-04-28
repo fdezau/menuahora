@@ -4,7 +4,7 @@ import SplashScreen from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   title: "MenuAhora \u2014 Comida de casa sin salir de casa",
-  description: "Pide tu men\u00fa casero del d\u00eda con delivery. Cocineras cerca de tu ubicaci\u00f3n.",
+  description: "Pide tu menú casero del día con delivery. Cocineras cerca de tu ubicación.",
   manifest: "/manifest.json",
 };
 

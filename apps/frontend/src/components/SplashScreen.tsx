@@ -41,7 +41,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
             transform: fase >= 2 ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
-          Comida de casa sin salir de casa \ud83c\udfe0
+          Comida de casa sin salir de casa 🏠
         </p>
 
         <div

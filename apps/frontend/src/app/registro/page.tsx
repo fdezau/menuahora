@@ -38,9 +38,9 @@ export default function RegistroPage() {
           )}
 
           <input type="text" placeholder="Nombre completo" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
-          <input type="email" placeholder="Correo electr\u00f3nico" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
-          <input type="password" placeholder="Contrase\u00f1a (m\u00edn. 6 caracteres)" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
-          <input type="tel" placeholder="Tel\u00e9fono (opcional)" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" />
+          <input type="email" placeholder="Correo electrónico" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
+          <input type="password" placeholder="Contraseña (mín. 6 caracteres)" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" required />
+          <input type="tel" placeholder="Teléfono (opcional)" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all" />
 
           <div className="flex gap-3">
             <button type="button" onClick={() => setForm({ ...form, rol: 'CLIENTE' })} className={`flex-1 py-3 rounded-xl font-semibold transition-all ${'bg-primary-600 text-white' if 1 else ''}`}>
@@ -57,8 +57,8 @@ export default function RegistroPage() {
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          \u00bfYa tienes cuenta?{' '}
-          <Link href="/login" className="text-primary-600 font-semibold hover:underline">Inicia sesi\u00f3n</Link>
+          ¿Ya tienes cuenta?{' '}
+          <Link href="/login" className="text-primary-600 font-semibold hover:underline">Inicia sesión</Link>
         </p>
       </div>
     </div>
